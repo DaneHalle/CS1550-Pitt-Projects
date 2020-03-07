@@ -71,32 +71,21 @@ typedef struct museumShared{ //Shared variable for process sync
  * If there are enough resources for the visitor to enter now, will exit method to tour.
  * At every exit, will up() the lock.
  */
-int visitorArrives(museumShared *mShare, int id)
+void visitorArrives(museumShared *mShare, int id)
 {
 	down(mShare->lock);
 	printf("Visitor %d arrives at time %d.\n", id, getTime());
 	fflush(stdout);
-
-	if(*(mShare->guidesLeft)<1 || (*(mShare->numViews)>=10 && *(mShare->guidesLeft)<=1)){
-		up(mShare->lock);
-		return 1;
-	}
-
 	*(mShare->numWaiting)+=1;
-
 	up(mShare->wantToOpen);
-
     if(!*(mShare->museumOpen) || (*(mShare->numViews)>=10 && *mShare->guidesLeft>=2)){
     	up(mShare->lock);
     		down(mShare->wantToTour);
     	down(mShare->lock); 
     }
-
     *(mShare->visitInside)+=1;
     *(mShare->numViews)+=1;
-
 	up(mShare->lock);
-	return 0;
 }
 
 /*
@@ -107,32 +96,18 @@ int visitorArrives(museumShared *mShare, int id)
  * Checks to see if visitors are left again and then will exit to open.
  * At every exit, will up() lthe lock.
  */
-int tourguideArrives(museumShared *mShare, int id)
+void tourguideArrives(museumShared *mShare, int id)
 {
 	down(mShare->lock);
 	printf("Tour guide %d arrives at time %d.\n", id, getTime());
 	fflush(stdout);
-
-	if(*mShare->visitLeft<1){
-    	up(mShare->lock);
-        return 1;
-    }
-
-    while(*(mShare->guidesInside)==2){
+    if(*(mShare->guidesInside)==2){
     	up(mShare->lock);
     		down(mShare->wantToOpen);
     	down(mShare->lock);
     }
-    
-    if(*mShare->visitLeft<1){
-       	up(mShare->lock);
-        return 1;
-    }
-
 	up(mShare->lock);
-
     *(mShare->guidesInside)+=1;
-	return 0;
 }
 
 /*
@@ -142,12 +117,9 @@ int tourguideArrives(museumShared *mShare, int id)
 void tourMuseum(museumShared *mShare, int id)
 {
 	down(mShare->lock);
-
 	printf("Visitor %d tours the museum at time %d.\n", id, getTime());
 	fflush(stdout);
-
 	*(mShare->numWaiting)-=1;
-
 	up(mShare->lock);
 	sleep(2);
 }
@@ -159,17 +131,13 @@ void tourMuseum(museumShared *mShare, int id)
 void openMuseum(museumShared *mShare, int id)
 {
 	down(mShare->lock);
-
 	printf("Tour guide %d opens the museum for tours at time %d.\n", id, getTime());
 	fflush(stdout);
-
 	*(mShare->museumOpen)=true;
-
 	int i;
     for(i=0; i<*(mShare->numWaiting) && i<10; i++){
 		up(mShare->wantToTour);
     }
-
 	up(mShare->lock);
 }
 
@@ -184,10 +152,8 @@ void visitorLeaves(museumShared *mShare, int id)
 	down(mShare->lock);
 	printf("Visitor %d leaves the museum at time %d.\n", id, getTime());
 	fflush(stdout);
-
 	*(mShare->visitInside)-=1;
     *(mShare->visitLeft)-=1;
-
     if(*(mShare->visitInside)==0 && *(mShare->guidesInside)>0){
     	if(*(mShare->guidesInside)==1){
     		*(mShare->numViews)-=10;
@@ -198,7 +164,6 @@ void visitorLeaves(museumShared *mShare, int id)
     		up(mShare->lastVisitor);
     	}
     }
-
 	up(mShare->lock);
 }
 
@@ -214,23 +179,17 @@ void tourguideLeaves(museumShared *mShare, int id)
     if(*(mShare->visitInside)>0 || *(mShare->numViews)<1 || *(mShare->numWaiting)>1 || *(mShare->guidesInside)>1 || *(mShare->visitLeft)>0){
     	down(mShare->lastVisitor);
     }
-
 	down(mShare->lock);
-
 	printf("Tour guide %d leaves the museum at time %d.\n", id, getTime());
 	fflush(stdout);
-
 	*(mShare->guidesLeft)-=1;
 	*(mShare->guidesInside)-=1;
-
     if(*(mShare->visitInside)==0 && *(mShare->guidesInside)==0){
         *(mShare->museumOpen)=false;
     	printf("The museum is now empty.\n");
     	fflush(stdout);
     }
-
 	up(mShare->wantToOpen);
-
 	up(mShare->lock);
 }
 
@@ -240,10 +199,8 @@ void tourguideLeaves(museumShared *mShare, int id)
  */
 void guide_process(museumShared *mShare, int id)
 {
-	int not_enter=tourguideArrives(mShare, id);
-	if(!not_enter){
-		openMuseum(mShare, id);
-	}
+	tourguideArrives(mShare, id);
+	openMuseum(mShare, id);
 	tourguideLeaves(mShare, id);
 }
 
@@ -253,10 +210,8 @@ void guide_process(museumShared *mShare, int id)
  */
 void visitor_process(museumShared *mShare, int id)
 {	
-	int not_enter=visitorArrives(mShare, id);
-	if(!not_enter){
-		tourMuseum(mShare, id);
-	}
+	visitorArrives(mShare, id);
+	tourMuseum(mShare, id);
 	visitorLeaves(mShare, id);
 }
 
@@ -274,14 +229,7 @@ int main(int argc, char** argv)
 		fflush(stdout);
 		return 0;
 	}else{
-		int m=0;	 
-		int k=0;
-		int pv=0;
-	    int dv=0;
-	    int pg=0; 
-	    int dg=0; 
-	    int sv=0; 
-	    int sg=0;
+		int m, k, pv, dv, pg, dg, sv, sg=0;	 
 	    int i;
 		for(i=1; i<argc; i+=2){
 			if(strcmp(argv[i], "-m")==0){
@@ -302,11 +250,6 @@ int main(int argc, char** argv)
 				sg=atoi(argv[i+1]);
 			}
 		}
-		if(m<1 || k<1){
-			printf("Bad arguments\n");
-			fflush(stdout);
-			return 0;
-		}
 		//The making of the shared variable for the processes. 
 		void *ptr=mmap(NULL, sizeof(struct museumShared), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, 0, 0);
 		struct cs1550_sem *inlock=(struct cs1550_sem *)ptr;
@@ -320,16 +263,11 @@ int main(int argc, char** argv)
 		int *inNumViews=inVisitInside+1;
 		int *inNumWaiting=inNumViews+1;
 		bool *inMuseumOpen=(bool *)(inNumWaiting+1);
-		inlock->value=1;
-		inToOpen->value=0;
-		inToTour->value=0;
-		inLast->value=0;
-		*inGuideLeft=k;
-		*inGuideInside=0;
-		*inVisitLeft=m;
-		*inVisitInside=0;
-		*inNumViews=0;
-		*inNumWaiting=0;
+		inlock->value=1;	inToOpen->value=0;
+		inToTour->value=0;	inLast->value=0;
+		*inGuideLeft=k;		*inGuideInside=0;
+		*inVisitLeft=m;		*inVisitInside=0;
+		*inNumViews=0;		*inNumWaiting=0;
 		*inMuseumOpen=false;
 		museumShared mShare;
 		mShare.lock=inlock;
@@ -343,12 +281,9 @@ int main(int argc, char** argv)
 		mShare.numViews=inNumViews;
 		mShare.numWaiting=inNumWaiting;
 		mShare.museumOpen=inMuseumOpen;
-
 		printf("The museum is now empty\n");
 		fflush(stdout);
 		startTime=getCur();
-		// startTime=getTime();
-
 		int pid=fork();
 		if(pid==0){ //Child process/Visitor Spawner
 			srand(sv);
@@ -356,8 +291,6 @@ int main(int argc, char** argv)
 			for(i=0;i<m; i++){
 				int spawn=fork();
 				if(spawn==0){
-					// printf("\t%d\n", getTime());
-					// fflush(stdout);
 					visitor_process(&mShare, i);
 					break;
 				}else{
