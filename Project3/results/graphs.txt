@@ -1,0 +1,234 @@
+
+gzip - SECOND
+Algorithm: SECOND
+Number of frames: 8
+Total memory accesses: 481044
+Total page faults: 44918
+Total writes to disk: 39894
+
+Algorithm: SECOND
+Number of frames: 16
+Total memory accesses: 481044
+Total page faults: 42384
+Total writes to disk: 39856
+
+Algorithm: SECOND
+Number of frames: 32
+Total memory accesses: 481044
+Total page faults: 41120
+Total writes to disk: 39825
+
+Algorithm: SECOND
+Number of frames: 64
+Total memory accesses: 481044
+Total page faults: 40496
+Total writes to disk: 39793
+
+
+gcc - SECOND
+Algorithm: SECOND
+Number of frames: 8
+Total memory accesses: 515683
+Total page faults: 29011
+Total writes to disk: 11519
+
+Algorithm: SECOND
+Number of frames: 16
+Total memory accesses: 515683
+Total page faults: 8568
+Total writes to disk: 3542
+
+Algorithm: SECOND
+Number of frames: 32
+Total memory accesses: 515683
+Total page faults: 1375
+Total writes to disk: 660
+
+Algorithm: SECOND
+Number of frames: 64
+Total memory accesses: 515683
+Total page faults: 551
+Total writes to disk: 258
+
+
+swim - SECOND
+Algorithm: SECOND
+Number of frames: 8
+Total memory accesses: 303193
+Total page faults: 13893
+Total writes to disk: 8499
+
+Algorithm: SECOND
+Number of frames: 16
+Total memory accesses: 303193
+Total page faults: 844
+Total writes to disk: 470
+
+Algorithm: SECOND
+Number of frames: 32
+Total memory accesses: 303193
+Total page faults: 326
+Total writes to disk: 158
+
+Algorithm: SECOND
+Number of frames: 64
+Total memory accesses: 303193
+Total page faults: 177
+Total writes to disk: 69
+
+
+gzip - OPTIMAL
+Algorithm: OPT
+Number of frames: 8
+Total memory accesses: 481044
+Total page faults: 39874
+Total writes to disk: 39845
+
+Algorithm: OPT
+Number of frames: 16
+Total memory accesses: 481044
+Total page faults: 39856
+Total writes to disk: 39829
+
+Algorithm: OPT
+Number of frames: 32
+Total memory accesses: 481044
+Total page faults: 39856
+Total writes to disk: 39822
+
+Algorithm: OPT
+Number of frames: 64
+Total memory accesses: 481044
+Total page faults: 39856
+Total writes to disk: 39790
+
+
+gcc - OPTIMAL
+Algorithm: OPT
+Number of frames: 8
+Total memory accesses: 515683
+Total page faults: 13328
+Total writes to disk: 4381
+
+Algorithm: OPT
+Number of frames: 16
+Total memory accesses: 515683
+Total page faults: 3020
+Total writes to disk: 1020
+
+Algorithm: OPT
+Number of frames: 32
+Total memory accesses: 515683
+Total page faults: 491
+Total writes to disk: 221
+
+Algorithm: OPT
+Number of frames: 64
+Total memory accesses: 515683
+Total page faults: 318
+Total writes to disk: 127
+
+
+swim - OPTIMAL
+Algorithm: OPT
+Number of frames: 8
+Total memory accesses: 303193
+Total page faults: 4417
+Total writes to disk: 2183
+
+Algorithm: OPT
+Number of frames: 16
+Total memory accesses: 303193
+Total page faults: 358
+Total writes to disk: 151
+
+Algorithm: OPT
+Number of frames: 32
+Total memory accesses: 303193
+Total page faults: 144
+Total writes to disk: 73
+
+Algorithm: OPT
+Number of frames: 64
+Total memory accesses: 303193
+Total page faults: 135
+Total writes to disk: 41
+
+
+gzip - LRU
+Algorithm: LRU
+Number of frames: 8
+Total memory accesses: 481044
+Total page faults: 39905
+Total writes to disk: 39864
+
+Algorithm: LRU
+Number of frames: 16
+Total memory accesses: 481044
+Total page faults: 39883
+Total writes to disk: 39845
+
+Algorithm: LRU
+Number of frames: 32
+Total memory accesses: 481044
+Total page faults: 39874
+Total writes to disk: 39822
+
+Algorithm: LRU
+Number of frames: 64
+Total memory accesses: 481044
+Total page faults: 39874
+Total writes to disk: 39790
+
+
+gcc - LRU
+Algorithm: LRU
+Number of frames: 8
+Total memory accesses: 515683
+Total page faults: 23027
+Total writes to disk: 7464
+
+Algorithm: LRU
+Number of frames: 16
+Total memory accesses: 515683
+Total page faults: 6172
+Total writes to disk: 2226
+
+Algorithm: LRU
+Number of frames: 32
+Total memory accesses: 515683
+Total page faults: 736
+Total writes to disk: 344
+
+Algorithm: LRU
+Number of frames: 64
+Total memory accesses: 515683
+Total page faults: 409
+Total writes to disk: 169
+
+
+swim - LRU
+Algorithm: LRU
+Number of frames: 8
+Total memory accesses: 303193
+Total page faults: 9387
+Total writes to disk: 5280
+
+Algorithm: LRU
+Number of frames: 16
+Total memory accesses: 303193
+Total page faults: 530
+Total writes to disk: 239
+
+Algorithm: LRU
+Number of frames: 32
+Total memory accesses: 303193
+Total page faults: 205
+Total writes to disk: 83
+
+Algorithm: LRU
+Number of frames: 64
+Total memory accesses: 303193
+Total page faults: 140
+Total writes to disk: 47
+
